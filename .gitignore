@@ -1,0 +1,5 @@
+# Python cache
+__pycache__/
+
+# Run outputs (your records, screening decisions and review sheet)
+results_*

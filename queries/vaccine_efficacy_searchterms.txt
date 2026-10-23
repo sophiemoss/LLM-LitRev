@@ -1,0 +1,18 @@
+# Example search terms: efficacy of malaria vaccines.
+# Format: source<TAB>name<TAB>query   (a real TAB between columns; source = pubmed, europepmc or clinicaltrials)
+# Each source has its own query syntax. Use UPPERCASE AND / OR / NOT. End a line with \ to continue it.
+# These are a starting point: check each one in the source's own web search and compare the hit counts.
+
+# PubMed (database). [mh] = MeSH heading, [tiab] = title/abstract, [pt] = publication type.
+pubmed	pubmed_vaccine_efficacy	("Malaria Vaccines"[mh] OR ((malaria[tiab] OR "Plasmodium falciparum"[tiab]) AND (vaccin*[tiab] OR "RTS,S"[tiab] OR R21[tiab] OR PfSPZ[tiab]))) \
+	AND (efficacy[tiab] OR effectiveness[tiab] OR "protective efficacy"[tiab]) \
+	AND ("Randomized Controlled Trial"[pt] OR randomi*[tiab] OR "controlled trial"[tiab])
+
+# Europe PMC (database): here only preprints (SRC:PPR), which PubMed mostly does not index.
+# TITLE_ABS: searches title and abstract (without it Europe PMC also searches full text).
+# Drop "SRC:PPR AND" to search all of Europe PMC; records also in PubMed are removed as duplicates.
+europepmc	preprints_vaccine_efficacy	SRC:PPR AND TITLE_ABS:(malaria AND (vaccin* OR "RTS,S" OR R21 OR PfSPZ) AND (efficacy OR effectiveness) AND (randomi* OR trial))
+
+# ClinicalTrials.gov (register): registered interventional trials, including unpublished and ongoing ones.
+# AREA[...] limits a term to one field of the trial record.
+clinicaltrials	registered_vaccine_trials	AREA[ConditionSearch]malaria AND AREA[InterventionSearch](vaccine OR "RTS,S" OR R21 OR PfSPZ) AND AREA[StudyType]INTERVENTIONAL

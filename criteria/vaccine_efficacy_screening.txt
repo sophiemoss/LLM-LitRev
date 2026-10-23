@@ -1,0 +1,8 @@
+# Example screening criteria: efficacy of malaria vaccines. Edit freely.
+# Format: code<TAB>criterion. A record is kept only if it meets ALL criteria.
+# Use the codes in your exclusion reasons at full-text stage too (e.g. "C4: no efficacy outcome").
+C1	Study in humans (not an animal, in-vitro or purely laboratory study)
+C2	Evaluates a vaccine against malaria (Plasmodium infection), e.g. RTS,S/AS01, R21/Matrix-M, PfSPZ or another candidate malaria vaccine
+C3	Compares vaccinated participants with an unvaccinated or control-vaccine group (randomised or non-randomised controlled design)
+C4	Reports, or for a registered trial plans to report, vaccine efficacy or effectiveness against a malaria outcome (clinical malaria, severe malaria, infection or parasitaemia, hospitalisation or death)
+C5	Is a primary study or a trial registration (not a review, editorial, commentary, or a modelling-only or cost-effectiveness study)
