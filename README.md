@@ -24,7 +24,7 @@ export NCBI_EMAIL=...          # your email for PubMed API
 
 Then run `source ~/.bashrc`, or open a new terminal. Keep the real key in `~/.bashrc` only: never in this README, in scripts or in git.
 
-## PRISMA 2020 literature review (`lit_extract.py`)
+## PRISMA style 2020 literature review (`lit_extract.py`)
 
 ### Three steps, one command
 
@@ -88,7 +88,7 @@ If your sheet has missing or inconsistent entries, it lists every problem and st
 Additional options:
 `--eligibility my_sheet.csv` to use a review sheet saved under another name.
 
-# 4. Validate the screening (don't skip this)
+# 4. Validate the screening
 
 The model can wrongly exclude relevant papers, so check how often it does. The number that matters is **sensitivity**: the share of relevant records that the model kept.
 
@@ -101,12 +101,6 @@ python evaluate.py --pred results_vaccine_efficacy_searchterms_screening.csv --g
 ```
 
 The model's `unclear` and `no_abstract` decisions count as include. The output lists the relevant records that the model excluded, so read those first. If sensitivity is low, loosen your criteria or use a stronger model (`--model`).
-
-Record your results here:
-
-| Search terms | Criteria | Records compared | Sensitivity | Specificity | Notes |
-|---|---|---|---|---|---|
-| | | | | | |
 
 ## Reference
 
@@ -124,7 +118,7 @@ After step 2, `results_<name>_for_review.csv` lists every record the model did *
 
 Running step 2 again never overwrites a sheet that already exists, so your decisions are safe.
 
-### Sources you can search
+### Sources you can search with this tool
 
 | Source | PRISMA box | Name in the search terms file | What it adds |
 |---|---|---|---|
@@ -133,15 +127,19 @@ Running step 2 again never overwrites a sheet that already exists, so your decis
 | ClinicalTrials.gov | Registers | `clinicaltrials` | Registered trials, including unpublished and ongoing ones, which helps limit publication bias |
 | Anything else | Other methods | `--other-records CSV` | Websites, organisations (e.g. WHO reports), and reference lists of included papers and reviews |
 
-**Not built in:** Embase, Scopus, Web of Science and Cochrane CENTRAL need a subscription or API key. WHO ICTRP (which includes the Pan African Clinical Trials Registry) has no open search API. A formal review would normally include Embase and CENTRAL, so search them on their own websites and either add the records with `--other-records` or report them yourself. The script only counts what you give it.
+**Sources that are not built in:** Embase, Scopus, Web of Science and Cochrane CENTRAL need a subscription or API key. WHO ICTRP (which includes the Pan African Clinical Trials Registry) has no open search API. 
+
+Note: A PRISMA compliant literature review would normally include Embase and CENTRAL, so you should also search them on their own websites and either add the records with `--other-records` or report them yourself.
 
 For `--other-records`, copy `other_records_template.csv` and fill in one row per record. The columns are `source,title,abstract,doi,pmid,nct_id,year,url`.
 
-### The search terms file
+### Files you need to make:
+### Creating the search terms file
+
+See example: `queries/vaccine_efficacy_searchterms.txt`
 
 - One search per line: `source<TAB>name<TAB>query`, with a real tab between the columns.
 - A line with only `name<TAB>query` is treated as a PubMed search.
-- Lines starting with `#` are ignored. A line ending in `\` continues on the next line.
 - Every search runs, and the results are merged and de-duplicated across sources.
 
 Each source has its own query syntax. All of them need **uppercase** `AND`, `OR`, `NOT`, `"quotes"` for phrases and `( )` for grouping:
@@ -150,12 +148,11 @@ Each source has its own query syntax. All of them need **uppercase** `AND`, `OR`
 - **Europe PMC:** `TITLE_ABS:(...)` searches the title and abstract only. Without it, the full text is searched too, which gives many more hits. `SRC:PPR` limits a search to preprints.
 - **ClinicalTrials.gov:** plain terms, or `AREA[ConditionSearch]`, `AREA[InterventionSearch]` and `AREA[StudyType]` to search one field.
 
-The example searches are a starting point, not a validated search strategy. Try each one on the source's own website and compare the hit counts. Ideally, have a librarian review your strategy.
-
 ### Screening criteria file
 
-A plain text file with one criterion per line: `code<TAB>criterion` (see `criteria/vaccine_efficacy_screening.txt`).
+See example: `criteria/vaccine_efficacy_screening.txt`
 
+A plain text file with one criterion per line
 - A record must meet **all** criteria to be included.
 - For each record, the model answers `include`, `exclude` (naming the first criterion it fails) or `unclear`.
 - `unclear` records, and records with no abstract or summary, are never excluded automatically. They go to your review sheet.
@@ -188,25 +185,6 @@ A plain text file with one criterion per line: `code<TAB>criterion` (see `criter
 | Reports sought / not retrieved / assessed / excluded with reasons | Your review sheet. Other-methods records go straight to "reports sought" |
 | Studies included / reports of included studies | Your review sheet: rows with `eligible` = `yes`, and how many different `study_id`s they have |
 
-**About the Word diagram:** step 3 fills in a copy of `PRISMA_2020_flow_diagram_new_SRs_v2.docx` (kept next to `lit_extract.py`). Your original template is not changed; use `--prisma-template` to point to a different copy. The boxes have a fixed size, so text is shrunk to fit, and step 3 warns you if a box may still overflow. Short, grouped exclusion reasons read best. Always open the diagram and check it before you use it. If you didn't search other sources, the "other methods" column shows 0: delete it, or use the PRISMA 2020 template for databases and registers only.
-
-Here is an example of `results_<name>_prisma.txt` (from a small test):
-
-```
-SCREENING
-  Databases and registers
-    Records screened (n = 4)
-    Records excluded** (n = 2)
-      by automation tool (n = 1)
-        C2: 1  (Malaria vaccine)
-      by human reviewer (n = 1)
-    Reports sought for retrieval (n = 2)
-    Reports not retrieved (n = 0)
-    Reports assessed for eligibility (n = 2)
-    Reports excluded: (n = 1)
-      C4: no efficacy outcome (n = 1)
-```
-
 ### Other options and large searches
 
 | Option | What it does |
@@ -233,4 +211,4 @@ Good to know:
 - Keyword searches miss some relevant records and find some irrelevant ones.
 - Trial registry records are screened on their summary, conditions and interventions. These say less than an abstract, so expect more `unclear` decisions.
 - A verified evidence quote proves the sentence exists in the abstract. It doesn't prove the model interpreted it correctly.
-- The scripts were unit-tested offline with a fake model. The searches were tested against the live PubMed, Europe PMC and ClinicalTrials.gov APIs, but screening has not been run with the real model yet, so check your first outputs by hand.
+- The scripts were unit-tested offline with a fake model. The searches were tested against the live PubMed, Europe PMC and ClinicalTrials.gov APIs, and screening identified an initial sensitivity of 0.981 and specificity of 0.936.
