@@ -52,7 +52,7 @@ This step makes no API calls. It searches every source, removes duplicates, and 
 Additional options:
 `--other-records my_records.csv` to add records you found another way, e.g. WHO reports or reference lists (see [Sources you can search](#sources-you-can-search)).
 
-# 2. Screening against your criteria
+# 2. Screening titles and abstracts only (based on your criteria file)
 
 Write your inclusion criteria in a criteria file, one per line (see [Screening criteria file](#screening-criteria-file) below). Claude checks every title and abstract against them. Run the same command with `--screening` added:
 
@@ -69,7 +69,7 @@ This step makes one API call per record. It gives you:
 Additional options:
 `--max-papers N` to keep only the first N records from each search (for PubMed, the N most relevant).Only use it for a quick trial run as a PRISMA style review needs every record.
 
-# 3. Eligibility and included studies
+# 3. Eligibility and included studies (full-text check)
 
 First, open `results_<name>_for_review.csv` and fill in your decisions (see [Your review sheet](#your-review-sheet) below). Then run the same command again with `--eligibility` added:
 
@@ -88,9 +88,9 @@ If your sheet has missing or inconsistent entries, it lists every problem and st
 Additional options:
 `--eligibility my_sheet.csv` to use a review sheet saved under another name.
 
-# 4. Validate the screening
+# 4. Validate the screening step (Step 2, Titles & Abstracts)
 
-The model can wrongly exclude relevant papers, so check how often it does. The number that matters is **sensitivity**: the share of relevant records that the model kept.
+The model can wrongly exclude relevant papers in the screening step, so you need to validate this to check how often it does that. The number that matters is **sensitivity**: the share of relevant records that the model kept.
 
 1. Pick a random sample of records (e.g. 100) from `results_<name>_screening.csv`.
 2. Screen them yourself **without looking at the model's decisions**. Save your answers as `gold_screening.csv` with two columns, `record_id,decision`, where decision is `include` or `exclude` (copy `gold_screening_template.csv`).
@@ -101,6 +101,8 @@ python evaluate.py --pred results_vaccine_efficacy_searchterms_screening.csv --g
 ```
 
 The model's `unclear` and `no_abstract` decisions count as include. The output lists the relevant records that the model excluded, so read those first. If sensitivity is low, loosen your criteria or use a stronger model (`--model`).
+
+During unit-testing offline, the searches were tested against the live PubMed, Europe PMC and ClinicalTrials.gov APIs, and screening identified an initial sensitivity of 0.981 and specificity of 0.936.
 
 ## Reference
 
