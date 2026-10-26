@@ -7,7 +7,7 @@ This tool is a helper for systematic reviews that follows the **PRISMA 2020 flow
 
 **`evaluate.py`** scores the model's screening against your own blind screening of a sample.
 
-Everything is checkable! The model only sees text we retrieved from the published databases, every screening decision comes with a reason, and an evidence quote which is machine-checked against the abstract, every exclusion by the model is listed, and the final decisions are human.
+Everything is checkable: the model only sees text we retrieved from the published databases, every screening decision comes with a reason, and an evidence quote which is machine-checked against the abstract, every exclusion by the model is listed, and the final decisions are human.
 
 ## How to Setup
 
