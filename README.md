@@ -3,7 +3,7 @@
 
 **`lit_extract.py`**
 
-This tool is a helper for systematic reviews that follows the **PRISMA 2020 flow diagram for new systematic reviews** (https://www.prisma-statement.org/prisma-2020-flow-diagram)). It searches PubMed, Europe PMC and ClinicalTrials.gov with your own specified search terms, screens titles and abstracts against your own study inclusion criteria with Claude API, gives you a list of records to include for your full-text decisions, and gives you an output of the number of records found and kept at each stage of the PRISMA process. 
+This tool is a helper for systematic reviews that follows the PRISMA 2020 flow diagram for new systematic reviews (https://www.prisma-statement.org/prisma-2020-flow-diagram)). It searches PubMed, Europe PMC and ClinicalTrials.gov with your own specified search terms, screens titles and abstracts against your own study inclusion criteria with Claude API, gives you a list of records to include for your full-text decisions, and gives you an output of the number of records found and kept at each stage of the PRISMA process. 
 
 **`evaluate.py`** scores the model's screening against your own blind screening of a sample.
 
