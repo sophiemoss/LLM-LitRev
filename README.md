@@ -213,4 +213,3 @@ Good to know:
 - Keyword searches miss some relevant records and find some irrelevant ones.
 - Trial registry records are screened on their summary, conditions and interventions. These say less than an abstract, so expect more `unclear` decisions.
 - A verified evidence quote proves the sentence exists in the abstract. It doesn't prove the model interpreted it correctly.
-- The scripts were unit-tested offline with a fake model. The searches were tested against the live PubMed, Europe PMC and ClinicalTrials.gov APIs, and screening identified an initial sensitivity of 0.981 and specificity of 0.936.
