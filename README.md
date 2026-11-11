@@ -3,7 +3,7 @@
 
 **`lit_extract.py`**
 
-This tool is a helper for systematic reviews that follows the PRISMA 2020 flow diagram for new systematic reviews (https://www.prisma-statement.org/prisma-2020-flow-diagram)). It searches PubMed, Europe PMC and ClinicalTrials.gov with your own specified search terms, screens titles and abstracts against your own study inclusion criteria with Claude API, gives you a list of records to include for your full-text decisions, and gives you an output of the number of records found and kept at each stage of the PRISMA process. 
+This tool is a helper for systematic reviews that follows the PRISMA 2020 flow diagram for new systematic reviews (https://www.prisma-statement.org/prisma-2020-flow-diagram). It searches PubMed, Europe PMC and ClinicalTrials.gov with your own specified search terms, screens titles and abstracts against your own study inclusion criteria with Claude API, gives you a list of records to include for your full-text decisions, and gives you an output of the number of records found and kept at each stage of the PRISMA process. 
 
 **`evaluate.py`** scores the model's screening against your own blind screening of a sample.
 
@@ -131,7 +131,7 @@ Running step 2 again never overwrites a sheet that already exists, so your decis
 
 **Sources that are not built in:** Embase, Scopus, Web of Science and Cochrane CENTRAL need a subscription or API key. WHO ICTRP (which includes the Pan African Clinical Trials Registry) has no open search API. 
 
-Note: A PRISMA compliant literature review would normally include Embase and CENTRAL, so you should also search them on their own websites and either add the records with `--other-records` or report them yourself.
+Note: A PRISMA compliant literature review would normally include Embase, so you should also search them on their own websites and either add the records with `--other-records` or report them yourself.
 
 For `--other-records`, copy `other_records_template.csv` and fill in one row per record. The columns are `source,title,abstract,doi,pmid,nct_id,year,url`.
 
