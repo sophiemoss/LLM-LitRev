@@ -3,11 +3,11 @@
 
 **`lit_extract.py`**
 
-This tool is a helper for systematic reviews that follows the **PRISMA 2020 flow diagram for new systematic reviews** (https://www.prisma-statement.org/prisma-2020-flow-diagram)). It searches PubMed, Europe PMC and ClinicalTrials.gov with your own specified search terms, then screens titles and abstracts against your own study inclusion criteria with the Claude API, and gives you a list of records to include for your full-text decisions. The tool gives you an output of the number of records found and kept at each stage of the PRISMA process. 
+This tool is a helper for systematic reviews that follows the **PRISMA 2020 flow diagram for new systematic reviews** (https://www.prisma-statement.org/prisma-2020-flow-diagram). It searches PubMed, Europe PMC and ClinicalTrials.gov with your own specified search terms, then screens titles and abstracts against your own study inclusion criteria with the Claude API, and gives you a list of records to include for your full-text decisions. The tool gives you an output of the number of records found and kept at each stage of the PRISMA process. 
 
 **`evaluate.py`** scores the model's screening against your own blind screening of a sample of records.
 
-Everything is checkable! The model only sees text retrieved from the published databases, every screening decision comes with a reason, and an evidence quote which is machine-checked against the abstract, every exclusion by the model is listed, and the final decisions are human.
+Everything is checkable: The model only sees text we retrieved from the published databases, every screening decision comes with a reason, and an evidence quote which is machine-checked against the abstract, every exclusion by the model is listed, and the final decisions are human.
 
 ## How to Setup
 
@@ -129,7 +129,7 @@ Running step 2 again never overwrites a sheet that already exists, so your decis
 
 **Sources that are not built in:** Embase, Scopus, Web of Science and Cochrane CENTRAL need a subscription or API key. WHO ICTRP (which includes the Pan African Clinical Trials Registry) has no open search API. 
 
-Note: A PRISMA compliant literature review would normally include Embase and CENTRAL, so you should also search them on their own websites and either add the records with `--other-records` or report them yourself.
+Note: A PRISMA compliant literature review would normally include Embase, so you should also search them on their own websites and either add the records with `--other-records` or report them yourself.
 
 For `--other-records`, copy `other_records_template.csv` and fill in one row per record. The columns are `source,title,abstract,doi,pmid,nct_id,year,url`.
 
@@ -211,4 +211,3 @@ Good to know:
 - Keyword searches miss some relevant records and find some irrelevant ones.
 - Trial registry records are screened on their summary, conditions and interventions. These say less than an abstract, so expect more `unclear` decisions.
 - A verified evidence quote proves the sentence exists in the abstract. It doesn't prove the model interpreted it correctly.
-- The scripts were unit-tested offline with a fake model. The searches were tested against the live PubMed, Europe PMC and ClinicalTrials.gov APIs, and screening identified an initial sensitivity of 0.981 and specificity of 0.936.
