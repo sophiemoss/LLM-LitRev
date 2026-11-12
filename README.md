@@ -3,11 +3,11 @@
 
 **`lit_extract.py`**
 
-This tool is a helper for systematic reviews that follows the **PRISMA 2020 flow diagram for new systematic reviews** (https://www.prisma-statement.org/prisma-2020-flow-diagram)). It searches PubMed, Europe PMC and ClinicalTrials.gov with your own specified search terms, screens titles and abstracts against your own study inclusion criteria with Claude API, gives you a list of records to include for your full-text decisions, and gives you an output of the number of records found and kept at each stage of the PRISMA process. 
+This tool is a helper for systematic reviews that follows the **PRISMA 2020 flow diagram for new systematic reviews** (https://www.prisma-statement.org/prisma-2020-flow-diagram)). It searches PubMed, Europe PMC and ClinicalTrials.gov with your own specified search terms, then screens titles and abstracts against your own study inclusion criteria with the Claude API, and gives you a list of records to include for your full-text decisions. The tool gives you an output of the number of records found and kept at each stage of the PRISMA process. 
 
-**`evaluate.py`** scores the model's screening against your own blind screening of a sample.
+**`evaluate.py`** scores the model's screening against your own blind screening of a sample of records.
 
-Everything is checkable! The model only sees text we retrieved from the published databases, every screening decision comes with a reason, and an evidence quote which is machine-checked against the abstract, every exclusion by the model is listed, and the final decisions are human.
+Everything is checkable! The model only sees text retrieved from the published databases, every screening decision comes with a reason, and an evidence quote which is machine-checked against the abstract, every exclusion by the model is listed, and the final decisions are human.
 
 ## How to Setup
 
@@ -41,7 +41,7 @@ Here is a worked example: a review of published data on the efficacy of **malari
 
 # 1. Identification: how many records are there?
 
-Write your searches in a search terms file, one search per line (see [The search terms file](#the-search-terms-file) below). These are the same searches you would type into PubMed and the other sources. Then run:
+Write your searches in a search terms file, one search per line (see [search terms file](/queries/vaccine_efficacy_searchterms.txt) below). These are the same searches you would type into PubMed and the other sources. Then run:
 
 ```bash
 python lit_extract.py --searchterms queries/vaccine_efficacy_searchterms.txt --date-from 2000
@@ -54,28 +54,26 @@ Additional options:
 
 # 2. Screening titles and abstracts only (based on your criteria file)
 
-Write your inclusion criteria in a criteria file, one per line (see [Screening criteria file](#screening-criteria-file) below). Claude checks every title and abstract against them. Run the same command with `--screening` added:
+Write your inclusion criteria in a criteria file, one per line (see [inclusion criteria file](criteria/vaccine_efficacy_inclusion_criteria.txt)). Claude checks every title and abstract against them. Run the same command with `--screening` added:
 
 ```bash
-python lit_extract.py --searchterms queries/vaccine_efficacy_searchterms.txt --date-from 2000 \
-    --screening criteria/vaccine_efficacy_screening.txt
+python lit_extract.py --searchterms queries/vaccine_efficacy.txt --date-from 2000 --screening criteria/vaccine_efficacy_inclusion_criteria.txt
 ```
 
-This step makes one API call per record. It gives you:
+This step makes one API call per record. It gives you two output files:
 
-- `results_<name>_screening.csv`: the model's decision and reason for every record
-- `results_<name>_for_review.csv`: your review sheet, listing the records the model did not exclude
+- `results_<name>_screening.csv`: the model's decision and reason for every record included or excluded
+- `results_<name>_for_review.csv`: your review sheet, listing the records the model thinks should be included, or were 'unclear'
 
 Additional options:
 `--max-papers N` to keep only the first N records from each search (for PubMed, the N most relevant).Only use it for a quick trial run as a PRISMA style review needs every record.
 
-# 3. Eligibility and included studies (full-text check)
+# 3. Eligibility and included studies (your full-text check)
 
-First, open `results_<name>_for_review.csv` and fill in your decisions (see [Your review sheet](#your-review-sheet) below). Then run the same command again with `--eligibility` added:
+First, open `results_<name>_for_review.csv` which contains a list of all of the records that the model thinks should be included in your review. Fill in your decisions (see [Your review sheet](#your-review-sheet) below). Then run the same command again with `--eligibility` added:
 
 ```bash
-python lit_extract.py --searchterms queries/vaccine_efficacy_searchterms.txt --date-from 2000 \
-    --screening criteria/vaccine_efficacy_screening.txt --eligibility
+python lit_extract.py --searchterms queries/vaccine_efficacy.txt --date-from 2000 --screening criteria/vaccine_efficacy_inclusion_criteria.txt --eligibility
 ```
 
 This step makes no API calls. It checks your sheet, and then gives you:
@@ -102,7 +100,7 @@ python evaluate.py --pred results_vaccine_efficacy_searchterms_screening.csv --g
 
 The model's `unclear` and `no_abstract` decisions count as include. The output lists the relevant records that the model excluded, so read those first. If sensitivity is low, loosen your criteria or use a stronger model (`--model`).
 
-During unit-testing offline, the searches were tested against the live PubMed, Europe PMC and ClinicalTrials.gov APIs, and screening identified an initial sensitivity of 0.981 and specificity of 0.936.
+During unit-testing offline, the searches were tested against the live PubMed, Europe PMC and ClinicalTrials.gov APIs, and screening identified a sensitivity of 0.981 and specificity of 0.936.
 
 ## Reference
 
