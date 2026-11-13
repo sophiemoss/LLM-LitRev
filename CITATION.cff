@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "LitRev: LLM-assisted literature screening and data extraction with PRISMA reporting"
+type: software
+authors:
+  - family-names: "Moss"
+    given-names: "Sophie"
+    orcid: "https://orcid.org/0000-0003-2843-9085"  
+version: "0.1.0"
+date-released: "2026-11-13"
+repository-code: "https://github.com/sophiemoss/LLM-LitRev"
+license: MIT
+abstract: "A pipeline that screens literature from PubMed, Europe PMC and ClinicalTrials.gov using the Claude API, with per-criterion verdicts, quote verification and PRISMA flow outputs. A demonstration; see the README for validation status."
+keywords:
+  - literature screening
+  - large language models
+  - systematic review
